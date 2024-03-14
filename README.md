@@ -1,5 +1,4 @@
-# CCSS - Cross Container Signal Exchange
-
+# CCSS - Cross Container Client-Server Example
 The purpose of this project is to adjust the approach of creating several projects in **different docker containers** and let them **communicate with each other** via sockets. The project can be used as a template for creating more complex projects.
 
 #### The concepts implemented in the job are:

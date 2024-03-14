@@ -1,0 +1,64 @@
+{
+    "configurations": [
+        {
+            "name": "Debug Collector",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Src/Collector/Bin/collector",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/Src/Collector/Bin",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build Collector",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "Debug Emitter",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Src/Emitter/Bin/emitter",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/Src/Emitter/Bin",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "serverLaunchTimeout": 40000,
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build Emitter",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug Collector and Emitter",
+            "configurations": ["Debug Collector", "Debug Emitter"]
+        }
+    ],
+    "version": "2.0.0"
+}

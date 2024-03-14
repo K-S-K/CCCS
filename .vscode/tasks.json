@@ -1,0 +1,161 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Status",
+            "detail": "git status",
+            "type": "shell",
+            "command": "clear; git status",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "focus": true
+            }
+        },
+        {
+            "label": "Clear Docker Containers",
+            "type": "shell",
+            "command": "clear; docker rm -v -f $(docker ps -qa)",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}/Src"
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true
+            }
+        },
+        {
+            "label": "Clear Docker Images",
+            "type": "shell",
+            "command": "clear; docker image prune -a --force",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}/Src"
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true
+            }
+        },
+        {
+            "label": "Clear all and start in Dockers",
+            "type": "shell",
+            "command": "docker rm -v -f $(docker ps -qa); docker image prune -a --force; clear; docker-compose up --force-recreate",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}/Src"
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true
+            }
+        },
+        {
+            "label": "Start in Dockers",
+            "type": "shell",
+            "command": "clear; docker-compose up --force-recreate",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}/Src"
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true
+            }
+        },
+        {
+            "label": "Port 8080 - who is using",
+            "type": "shell",
+            "command": "lsof -i :8080",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}/Src"
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true
+            }
+        },
+        {
+            "label": "Build Collector",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/Src/Collector"
+            },
+            "command": "clear; make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "Build Emitter",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/Src/Emitter"
+            },
+            "command": "clear; make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "Build All",
+            "dependsOn": [
+                "Build Emitter",
+                "Build Collector"
+            ],
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        }
+    ]
+}

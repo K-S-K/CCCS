@@ -1,4 +1,4 @@
-# CCSS - Cross Container Signal Exchange
+# CCSS - Cross Container Client-Server Example
 
 #### To start the Emitter and the Collector
 - Go to the Src directory

@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+  builder:
+    build: .
+    container_name: "builder-2024-05"
+    image: builder-2024-05:ver_1
+
+  emitter:
+    build: ./Emitter
+    depends_on:
+      - collector
+#    network_mode: "host"
+    network_mode: service:collector
+    image: ccss-emitter
+    container_name: "ccss_emitter"
+
+  collector:
+    build: ./Collector
+    image: ccss-collector
+#    network_mode: "host"
+    container_name: "ccss_collector"
+

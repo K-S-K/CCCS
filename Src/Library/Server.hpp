@@ -1,3 +1,17 @@
+#pragma once
+
+#ifndef CCCS_SRV
+#define CCCS_SRV
+
+#include <string>
+#include <cstring>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
 class Server
 {
 private:
@@ -20,3 +34,5 @@ public:
     bool Read(int socketId, unsigned short &value);
     bool Read(int socketId, unsigned char &value);
 };
+
+#endif // CCCS_SRV

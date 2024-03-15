@@ -1,11 +1,15 @@
 #pragma once
+
 #include <string>
 
-#define KSK_LABEL 205
+#ifndef CCCS_MSG
+#define CCCS_MSG
 
-enum KSK_TYPES
+#define CCCS_LABEL 205
+
+enum CCCS_TYPES
 {
-    KSK_TYPE_Measures = 1
+    CCCS_TYPE_Measures = 1
 };
 
 class IMessage
@@ -20,3 +24,5 @@ public:
     IMessage(unsigned char t) { type_sign = t; }
     ~IMessage() { ; }
 };
+
+#endif // CCCS_MSG

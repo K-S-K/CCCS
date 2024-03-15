@@ -3,7 +3,7 @@
 
 #include "BinaryWrapper.hpp"
 
-BinaryWrapper::BinaryWrapper(/* args */)
+BinaryWrapper::BinaryWrapper()
 {
 }
 
@@ -25,8 +25,8 @@ void BinaryWrapper::WrapMeasure(Measure input, unsigned char *&p, int &sz)
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // No   Sz Type   Comment
     // ~~~~|~~|~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    //  0   01 Label  KSK_LABEL - Check if it is our message
-    //  1   01 TypeID Id of the data type, from enum KSK_TYPES
+    //  0   01 Label  CCCS_LABEL - Check if it is our message
+    //  1   01 TypeID Id of the data type, from enum CCCS_TYPES
     //  2   02 Size   The size of the serialized data.
     //  3   XX Data   The transferring data
     //  N   01 1      Terminator
@@ -37,10 +37,10 @@ void BinaryWrapper::WrapMeasure(Measure input, unsigned char *&p, int &sz)
 
     int i = 0;
 
-    outer_data_content[i] = KSK_LABEL;
+    outer_data_content[i] = CCCS_LABEL;
     i += 1;
 
-    outer_data_content[i] = (unsigned char)KSK_TYPE_Measures;
+    outer_data_content[i] = (unsigned char)CCCS_TYPE_Measures;
     i += 1;
 
     memcpy(outer_data_content + i, &inner_data_size_label, sizeof(inner_data_size_label));
@@ -58,13 +58,13 @@ void BinaryWrapper::WrapMeasure(Measure input, unsigned char *&p, int &sz)
 Measure *BinaryWrapper::FromBinary(unsigned char *data)
 {
     int i = 0;
-    if (data[i] != KSK_LABEL)
+    if (data[i] != CCCS_LABEL)
     {
         return nullptr;
     }
     i++;
 
-    if (data[i] != KSK_TYPE_Measures)
+    if (data[i] != CCCS_TYPE_Measures)
     {
         return nullptr;
     }

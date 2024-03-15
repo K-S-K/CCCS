@@ -1,6 +1,7 @@
 #include "CollectorService.hpp"
 
 #include "../Library/BinaryWrapper.hpp"
+#include "../Library/CommTerm.hpp"
 #include "../Library/Measure.hpp"
 #include "../Library/Server.hpp"
 
@@ -23,7 +24,7 @@ bool CollectorService::Start()
 void CollectorService::Listen()
 {
     const char *stop_word = "stop";
-    // const char *stop_confirm = "stopped";
+    const char *stop_confirm = "stopped";
     bool stop_signal = false;
 
     // Listen until the stop signal
@@ -55,6 +56,8 @@ void CollectorService::Listen()
             }
         }
 
+        send(socketId, stop_confirm, sizeof(stop_confirm), 0); // echo as confirmation
+
         std::cout << "Close incoming connection, socketId " << socketId << std::endl;
         server->CloseSocket(socketId); // break connection
     }
@@ -73,7 +76,6 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
 
     unsigned char type_sign = 0;
     unsigned short data_size = 0;
-    const char *stop_confirm = "stopped";
 
     // read the type sign
     if (!server->Read(socketId, type_sign))
@@ -104,24 +106,35 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
 
         Measure meaIn = *(Measure::FromBinary(buffer));
 
-        std::string content = meaIn.To2String();
-        std::cout << "Readen from socketId " << socketId << ": " << content << std::endl;
+        std::cout << "Readen from socketId " << socketId << ": " << meaIn.To2String() << std::endl;
 
         msg = (IMessage *)&meaIn;
     }
     break;
 
+    case CCCS_TYPE_Conn_Term:
+    {
+        sz = data_size + 1;
+        unsigned char buffer[sz];
+        memset(buffer, '\0', sz);
+        server->ReadBinaryContent(socketId, buffer, sz);
+
+        CommTerm meaIn = *(CommTerm::FromBinary(buffer));
+
+        std::cout << "Readen from socketId " << socketId << ": " << meaIn.To2String() << std::endl;
+
+        msg = (IMessage *)&meaIn;
+
+        stop_signal = true;
+    }
+    break;
+
     default:
+        std::cout << "Unknuwn command: " << (int)type_sign << std::endl;
         break;
     }
 
-    {
-        std::string content = msg->To2String();
-        std::cout << "Converted " << socketId << ": " << content << std::endl;
-    }
-
-    stop_signal = true;
-    send(socketId, stop_confirm, sizeof(stop_confirm), 0); // echo as confirmation
+    // std::cout << "Converted " << socketId << ": " << msg->To2String() << std::endl;
 
     return true;
 }

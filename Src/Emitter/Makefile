@@ -1,5 +1,5 @@
 BINDIR := ./Bin
-SOURCE := ./Main.cpp ../Library/Client.cpp ../Library/Measure.cpp ../Library/BinaryWrapper.cpp
+SOURCE := ./Main.cpp ../Library/Client.cpp ../Library/Measure.cpp ../Library/CommTerm.cpp ../Library/BinaryWrapper.cpp
 BINARY := $(addprefix $(BINDIR)/, emitter)
 
 $(BINARY): $(SOURCE)

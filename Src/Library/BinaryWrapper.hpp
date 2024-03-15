@@ -1,4 +1,5 @@
 #include "Measure.hpp"
+#include "CommTerm.hpp"
 
 #ifndef BINARY_WR
 #define BINARY_WR
@@ -11,8 +12,8 @@ public:
     BinaryWrapper();
     ~BinaryWrapper();
 
-    static void WrapMeasure(Measure input, unsigned char *&p, int &sz);
-    static Measure *FromBinary(unsigned char *data);
+    static void WrapMessage(Measure input, unsigned char *&p, int &sz);
+    static void WrapMessage(CommTerm input, unsigned char *&p, int &sz);
 };
 
 #endif

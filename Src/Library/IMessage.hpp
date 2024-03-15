@@ -9,7 +9,8 @@
 
 enum CCCS_TYPES
 {
-    CCCS_TYPE_Measures = 1
+    CCCS_TYPE_Measures = 1,
+    CCCS_TYPE_Conn_Term = 2
 };
 
 class IMessage
@@ -19,7 +20,13 @@ private:
 
 public:
     unsigned char TypeSign() { return type_sign; }
-    virtual std::string To2String() { return "Unoverriden"; }
+    virtual std::string To2String()
+    {
+        char *str = (char *)calloc(80, 1);
+        snprintf(str, 80, "Message type: %d\n", type_sign);
+
+        return std::string(str);
+    }
 
     IMessage(unsigned char t) { type_sign = t; }
     ~IMessage() { ; }

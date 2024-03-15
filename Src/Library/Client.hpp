@@ -1,3 +1,8 @@
+#pragma once
+
+#ifndef CCCS_CLI
+#define CCCS_CLI
+
 class Client
 {
 private:
@@ -18,3 +23,5 @@ public:
     bool Send(const char *message, bool echo = true);
     bool Send(const unsigned char *data, size_t size_to_send, std::string comment = "");
 };
+
+#endif // CCCS_CLI

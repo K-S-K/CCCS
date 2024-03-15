@@ -94,7 +94,7 @@ bool Client::Send(const unsigned char *data, size_t size_to_send, std::string co
 
     if (sent_size == size_to_send)
     {
-        std::cout << "Sent " << sent_size << " bytes: " << comment << std::endl;
+        // std::cout << "Sent " << sent_size << " bytes: " << comment << std::endl;
     }
     else
     {

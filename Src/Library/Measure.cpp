@@ -38,8 +38,8 @@ void Measure::ToBinary(unsigned char *&p, size_t &sz)
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // No   Sz Type   Comment
     // ~~~~|~~|~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    //  0   01 Label  KSK_LABEL - Check if it is our message
-    //  1   01 TypeID Id of the data type, from enum KSK_TYPES
+    //  0   01 Label  CCCS_LABEL - Check if it is our message
+    //  1   01 TypeID Id of the data type, from enum CCCS_TYPES
     //  2   02 Size   The size of the serialized data.
     //  3   XX Data   The transferring data
     // ~~~~|~~|~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -130,7 +130,7 @@ void Measure::set_circ(const char *pstr)
     str_circ = str_tmp;
 }
 
-Measure::Measure(int id, double t, std::string cirq = "") : IMessage(KSK_TYPE_Measures)
+Measure::Measure(int id, double t, std::string cirq = "") : IMessage(CCCS_TYPE_Measures)
 {
     temperature = t;
     device_id = id;
@@ -151,7 +151,7 @@ Measure::Measure(int id, double t, std::string cirq = "") : IMessage(KSK_TYPE_Me
     //*/
 }
 
-Measure::Measure() : IMessage(KSK_TYPE_Measures)
+Measure::Measure() : IMessage(CCCS_TYPE_Measures)
 {
     circumstances = "";
     temperature = 0.0;

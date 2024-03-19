@@ -13,7 +13,7 @@ private:
     std::time_t time;
     double temperature;
     std::string circumstances;
-    char* str_circ;
+    char *str_circ = nullptr;
 
     void set_circ(const char *pstr);
 

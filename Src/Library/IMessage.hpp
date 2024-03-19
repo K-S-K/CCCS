@@ -27,6 +27,8 @@ public:
 
         return std::string(str);
     }
+    
+    virtual void ToBinary(unsigned char *&p, size_t &sz) = 0;
 
     IMessage(unsigned char t) { type_sign = t; }
     ~IMessage() { ; }

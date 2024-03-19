@@ -26,7 +26,7 @@ std::string Measure::To2String()
     char *str = (char *)calloc(80, 1);
     snprintf(str, 80, "[%d] %d:%d:%d %f %s\n", device_id,
              t->tm_hour, t->tm_min, t->tm_sec,
-             temperature, str_circ);
+             temperature, circumstances.c_str());
 
     return std::string(str);
 }
@@ -109,25 +109,8 @@ Measure *Measure::FromBinary(unsigned char *data)
     memcpy(circumstances_buf, data + i, circumstances_str_len);
 
     m->circumstances = std::string(circumstances_buf);
-    m->set_circ(circumstances_buf);
 
     return m;
-}
-
-void Measure::set_circ(const char *pstr)
-{
-    if (str_circ != nullptr)
-    {
-        delete (str_circ);
-    }
-
-    //  char str_tmp[strlen(pstr) + 1];
-
-    char *str_tmp = (char *)calloc(strlen(pstr) + 1, 1);
-
-    //  memset(str_tmp, '\0', sizeof(str_tmp));
-    memcpy(str_tmp, pstr, strlen(pstr));
-    str_circ = str_tmp;
 }
 
 Measure::Measure(int id, double t, std::string cirq = "") : IMessage(CCCS_TYPE_Measures)
@@ -135,8 +118,6 @@ Measure::Measure(int id, double t, std::string cirq = "") : IMessage(CCCS_TYPE_M
     temperature = t;
     device_id = id;
     circumstances = cirq.c_str();
-
-    set_circ(cirq.c_str());
 
     time = std::time(nullptr); // https://en.cppreference.com/w/cpp/chrono/c/time
 
@@ -156,7 +137,6 @@ Measure::Measure() : IMessage(CCCS_TYPE_Measures)
     circumstances = "";
     temperature = 0.0;
     time = {};
-    set_circ("");
 }
 
 Measure::~Measure()

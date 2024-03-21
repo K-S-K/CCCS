@@ -34,4 +34,7 @@ public:
     ~IMessage() { ; }
 };
 
+/// @brief Function type definition for the message transfer
+typedef void (*MsgTransferFn)(IMessage *);
+
 #endif // CCCS_MSG

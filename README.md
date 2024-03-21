@@ -23,7 +23,7 @@ docker-compose up --force-recreate
 ```
 
 ## History
-- [2024.03.21 - Add an Event Subscription](https://github.com/K-S-K/CCCS/pull/8)
+- [2024.03.21 - Add an Event Subscription](https://github.com/K-S-K/CCCS/pull/8/files)
 
 ## Other notes
 - Developed with Visual Studio Code under Ubuntu.

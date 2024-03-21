@@ -1,6 +1,12 @@
 BINDIR := ./Bin
-SOURCE := ./Main.cpp ./CollectorService.cpp ../Library/Server.cpp ../Library/Measure.cpp ../Library/CommTerm.cpp ../Library/BinaryWrapper.cpp
 BINARY := $(addprefix $(BINDIR)/, collector)
+
+LIB_SIGNALS := ../Library/Measure.cpp ../Library/CommTerm.cpp
+LIB_NETWORK := ../Library/Server.cpp
+SOURCE := ./Main.cpp \
+		  $(LIB_NETWORK) \
+		  $(LIB_SIGNALS) \
+          ./CollectorService.cpp \
 
 $(BINARY): $(SOURCE)
 	g++ -g -o $(BINARY) $(SOURCE)

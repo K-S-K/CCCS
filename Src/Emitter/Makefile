@@ -1,6 +1,11 @@
 BINDIR := ./Bin
-SOURCE := ./Main.cpp ../Library/Client.cpp ../Library/Measure.cpp ../Library/CommTerm.cpp ../Library/BinaryWrapper.cpp
 BINARY := $(addprefix $(BINDIR)/, emitter)
+
+LIB_SIGNALS := ../Library/Measure.cpp ../Library/CommTerm.cpp ../Library/BinaryWrapper.cpp
+LIB_NETWORK := ../Library/Client.cpp
+SOURCE := ./Main.cpp \
+		  $(LIB_NETWORK) \
+		  $(LIB_SIGNALS) \
 
 $(BINARY): $(SOURCE)
 	g++ -g -o $(BINARY) $(SOURCE)

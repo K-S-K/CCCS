@@ -68,6 +68,16 @@ void CollectorService::Listen()
     }
 }
 
+void CollectorService::NotifySubscribers(IMessage *msg)
+{
+    MsgTransferFn pfn = pfnMessageAccepted;
+
+    if (pfn != nullptr)
+    {
+        pfn(msg);
+    }
+}
+
 bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
 {
     int count = 0;
@@ -108,7 +118,7 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
 
         std::cout << "Readen from socketId " << socketId << ": " << meaIn.To2String() << std::endl;
 
-        msg = (IMessage *)&meaIn;
+        NotifySubscribers(&meaIn);
     }
     break;
 
@@ -123,7 +133,7 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
 
         std::cout << "Readen from socketId " << socketId << ": " << meaIn.To2String() << std::endl;
 
-        msg = (IMessage *)&meaIn;
+        NotifySubscribers(&meaIn);
 
         stop_signal = true;
     }
@@ -137,6 +147,11 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
     // std::cout << "Converted " << socketId << ": " << msg->To2String() << std::endl;
 
     return true;
+}
+
+void CollectorService::SubscribeToAcceptedMessages(MsgTransferFn pfn)
+{
+    pfnMessageAccepted = pfn;
 }
 
 CollectorService::CollectorService(int port)

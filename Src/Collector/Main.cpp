@@ -1,4 +1,26 @@
+#include "../Library/ELog/easylogging++.h"
+
 #include "CollectorService.hpp"
+
+INITIALIZE_EASYLOGGINGPP
+
+void ConfigureLog()
+{
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+
+    defaultConf.set(el::Level::Info, el::ConfigurationType::ToFile, "true");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::ToStandardOutput, "false");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::Filename, "collector.log.info");
+
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::ToFile, "true");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::ToStandardOutput, "false");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::Filename, "collector.log.debug");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime [%func] [%loc] %msg");
+
+    el::Loggers::reconfigureLogger("default", defaultConf);
+}
 
 void MessageAccepted(IMessage *msg)
 {
@@ -13,6 +35,11 @@ void MessageAccepted(IMessage *msg)
 
 int main()
 {
+    ConfigureLog();
+
+    LOG(DEBUG) << "Collector started";
+    LOG(INFO) << "Collector started";
+
     CollectorService collector = *(new CollectorService(8080));
 
     collector.SubscribeToAcceptedMessages(MessageAccepted);

@@ -2,13 +2,40 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "../Library/ELog/easylogging++.h"
+
 #include "../Library/BinaryWrapper.hpp"
 #include "../Library/CommTerm.hpp"
 #include "../Library/Measure.hpp"
 #include "../Library/Client.hpp"
 
+INITIALIZE_EASYLOGGINGPP
+
+void ConfigureLog()
+{
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+
+    defaultConf.set(el::Level::Info, el::ConfigurationType::ToFile, "true");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::ToStandardOutput, "false");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::Filename, "emitter.log.info");
+
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::ToFile, "true");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::ToStandardOutput, "false");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::Filename, "emitter.log.debug");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime [%func] [%loc] %msg");
+
+    el::Loggers::reconfigureLogger("default", defaultConf);
+}
+
 int main()
 {
+    ConfigureLog();
+
+    LOG(DEBUG) << "Emitter started";
+    LOG(INFO) << "Emitter started";
+
     int message_count = 5;
 
     sleep(2);

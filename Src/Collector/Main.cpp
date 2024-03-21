@@ -11,7 +11,7 @@ void ConfigureLog()
 
     defaultConf.set(el::Level::Info, el::ConfigurationType::ToFile, "true");
     defaultConf.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
-    defaultConf.set(el::Level::Info, el::ConfigurationType::ToStandardOutput, "false");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::ToStandardOutput, "true");
     defaultConf.set(el::Level::Info, el::ConfigurationType::Filename, "collector.log.info");
 
     defaultConf.set(el::Level::Debug, el::ConfigurationType::ToFile, "true");
@@ -26,11 +26,13 @@ void MessageAccepted(IMessage *msg)
 {
     if (msg == nullptr)
     {
-        std::cout << "Empty message accepted" << std::endl;
+        LOG(INFO) << "Empty message accepted";
+
         return;
     }
 
-    std::cout << "New message: " << msg->To2String() << std::endl;
+    LOG(DEBUG) << "New message: " << msg->To2String();
+    LOG(INFO) << "New message: " << msg->To2String();
 }
 
 int main()

@@ -1,9 +1,11 @@
-#include "CollectorService.hpp"
+#include "../Library/ELog/easylogging++.h"
 
 #include "../Library/BinaryWrapper.hpp"
 #include "../Library/CommTerm.hpp"
 #include "../Library/Measure.hpp"
 #include "../Library/Server.hpp"
+
+#include "CollectorService.hpp"
 
 bool CollectorService::Start()
 {
@@ -12,9 +14,9 @@ bool CollectorService::Start()
         return false;
     }
 
-    std::cout << "Collector is started." << std::endl;
-    std::cout << "Listening on port " << server->Port << std::endl;
-    std::cout << "Obtained SocketId " << server->SocketId << std::endl;
+    LOG(DEBUG) << "Collector is started.";
+    LOG(DEBUG) << "Listening on port " << server->Port;
+    LOG(DEBUG) << "Obtained SocketId " << server->SocketId;
 
     Listen();
 
@@ -32,7 +34,7 @@ void CollectorService::Listen()
     {
         int socketId = server->AcceptIncomingConnection();
 
-        std::cout << "Accepted incoming connection, socketId " << socketId << std::endl;
+        LOG(DEBUG) << "Accepted incoming connection, socketId " << socketId;
 
         while (!stop_signal)
         {
@@ -40,13 +42,13 @@ void CollectorService::Listen()
 
             if (!server->Read(socketId, project_sign))
             {
-                std::cout << "Can't read from socketId " << socketId << ". Close it." << std::endl;
+                LOG(DEBUG) << "Can't read from socketId " << socketId << ". Close it.";
                 break;
             }
 
             if (project_sign != CCCS_LABEL)
             {
-                std::cout << "The message prefix not recognized.  Close it." << std::endl;
+                LOG(DEBUG) << "The message prefix not recognized.  Close it.";
                 break;
             }
 
@@ -58,13 +60,13 @@ void CollectorService::Listen()
 
         send(socketId, stop_confirm, sizeof(stop_confirm), 0); // echo as confirmation
 
-        std::cout << "Close incoming connection, socketId " << socketId << std::endl;
+        LOG(DEBUG) << "Close incoming connection, socketId " << socketId;
         server->CloseSocket(socketId); // break connection
     }
 
     if (server->Stop())
     {
-        std::cout << "Collector is completed its job." << std::endl;
+        LOG(DEBUG) << "Collector is completed its job." << std::endl;
     }
 }
 
@@ -90,7 +92,7 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
     // read the type sign
     if (!server->Read(socketId, type_sign))
     {
-        std::cout << "Can't read a type sign from socketId " << socketId << ". Close it." << std::endl;
+        LOG(DEBUG) << "Can't read a type sign from socketId " << socketId << ". Close it.";
         {
             return false;
         };
@@ -99,7 +101,7 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
     // Read the content size
     if (!server->Read(socketId, data_size))
     {
-        std::cout << "Can't read the content size from socketId " << socketId << ". Close it." << std::endl;
+        LOG(DEBUG) << "Can't read the content size from socketId " << socketId << ". Close it.";
         return false;
     }
 
@@ -116,7 +118,7 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
 
         Measure meaIn = *(Measure::FromBinary(buffer));
 
-        std::cout << "Readen from socketId " << socketId << ": " << meaIn.To2String() << std::endl;
+        LOG(DEBUG) << "Readen from socketId " << socketId << ": " << meaIn.To2String();
 
         NotifySubscribers(&meaIn);
     }
@@ -131,7 +133,7 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
 
         CommTerm meaIn = *(CommTerm::FromBinary(buffer));
 
-        std::cout << "Readen from socketId " << socketId << ": " << meaIn.To2String() << std::endl;
+        LOG(DEBUG) << "Readen from socketId " << socketId << ": " << meaIn.To2String();
 
         NotifySubscribers(&meaIn);
 
@@ -140,11 +142,9 @@ bool CollectorService::ReadIncomingMessage(int socketId, bool &stop_signal)
     break;
 
     default:
-        std::cout << "Unknuwn command: " << (int)type_sign << std::endl;
+        LOG(DEBUG) << "Unknuwn command: " << (int)type_sign;
         break;
     }
-
-    // std::cout << "Converted " << socketId << ": " << msg->To2String() << std::endl;
 
     return true;
 }

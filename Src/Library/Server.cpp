@@ -1,6 +1,8 @@
 #include <iostream>
 #include <netinet/in.h>
 
+#include "ELog/easylogging++.h"
+
 #include "Server.hpp"
 
 Server::Server(int port, int buffSize)
@@ -21,7 +23,7 @@ bool Server::Start(void)
     // Creating socket file descriptor
     if ((SocketId = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     {
-        std::cerr << "Socket creation error" << std::endl;
+        LOG(DEBUG) << "Socket creation error";
         return false;
     }
 
@@ -33,14 +35,14 @@ bool Server::Start(void)
     // Bind socket to host:port
     if (bind(SocketId, (struct sockaddr *)&(address), sizeof(address)) < 0)
     {
-        perror("bind failed");
+        LOG(DEBUG) << "bind failed";
         return false;
     }
 
     // Listen for incoming connections
     if (listen(SocketId, 3) < 0)
     {
-        perror("listen failed");
+        LOG(DEBUG) << "listen failed";
         return false;
     }
 
@@ -62,24 +64,24 @@ bool Server::CloseSocket(int socketId)
     switch (result)
     {
     case 0:
-        std::cerr << "socket " << socketId << " was successfully closed" << std::endl;
+        LOG(DEBUG) << "socket " << socketId << " was successfully closed";
         return true;
         break;
 
     case EBADF:
-        std::cerr << "socket " << socketId << " is not a valid file descriptor" << std::endl;
+        LOG(DEBUG) << "socket " << socketId << " is not a valid file descriptor";
         break;
 
     case ENOTSOCK:
-        std::cerr << "socket " << socketId << " is not a socket." << std::endl;
+        LOG(DEBUG) << "socket " << socketId << " is not a socket.";
         break;
 
     case ENOTCONN:
-        std::cerr << "socket " << socketId << " is not connected." << std::endl;
+        LOG(DEBUG) << "socket " << socketId << " is not connected.";
         break;
 
     default:
-        std::cerr << "Connection Failed" << std::endl;
+        LOG(DEBUG) << "Connection Failed";
         break;
     }
 
@@ -94,7 +96,7 @@ int Server::AcceptIncomingConnection()
     // Accept incoming connection
     if ((socketId = accept(SocketId, (struct sockaddr *)&(address), (socklen_t *)&addrlen)) < 0)
     {
-        perror("accept failed");
+        LOG(DEBUG) << "accept failed";
         return -1;
     }
 

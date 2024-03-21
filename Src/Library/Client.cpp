@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <cstring>
 
+#include "ELog/easylogging++.h"
+
 #include "Client.hpp"
 
 Client::Client(int port, std::string host, int buffSize)
@@ -25,7 +27,7 @@ bool Client::Start()
                       0);          // system picks protocol (TCP)
     if (SocketId < 0)
     {
-        std::cerr << "Socket creation error" << std::endl;
+        LOG(DEBUG) << "Socket creation error";
         return false;
     }
 
@@ -36,14 +38,14 @@ bool Client::Start()
     // Convert IPv4 and IPv6 addresses from text to binary form
     if (inet_pton(AF_INET, Host.c_str(), &serv_addr.sin_addr) <= 0)
     {
-        std::cerr << "Invalid address / Address not supported" << std::endl;
+        LOG(DEBUG) << "Invalid address / Address not supported";
         return false;
     }
 
     // Connect to server
     if (connect(SocketId, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        std::cerr << "Connection Failed" << std::endl;
+        LOG(DEBUG) << "Connection Failed";
         return false;
     }
 
@@ -64,19 +66,19 @@ bool Client::Stop()
         break;
 
     case EBADF:
-        std::cerr << "socket " << SocketId << " is not a valid file descriptor" << std::endl;
+        LOG(DEBUG) << "socket " << SocketId << " is not a valid file descriptor";
         break;
 
     case ENOTSOCK:
-        std::cerr << "socket " << SocketId << " is not a socket." << std::endl;
+        LOG(DEBUG) << "socket " << SocketId << " is not a socket.";
         break;
 
     case ENOTCONN:
-        std::cerr << "socket " << SocketId << " is not connected." << std::endl;
+        LOG(DEBUG) << "socket " << SocketId << " is not connected.";
         break;
 
     default:
-        std::cerr << "Connection Failed" << std::endl;
+        LOG(DEBUG) << "Connection Failed";
         break;
     }
 
@@ -98,7 +100,7 @@ bool Client::Send(const unsigned char *data, size_t size_to_send, std::string co
     }
     else
     {
-        std::cerr << "Sent " << sent_size << " bytes instead of " << size_to_send << std::endl;
+        LOG(DEBUG) << "Sent " << sent_size << " bytes instead of " << size_to_send;
         return false;
     }
 
@@ -137,11 +139,11 @@ bool Client::Send(const char *buffer, bool echo)
 
     if (sent_size == size_to_send)
     {
-        std::cout << "Sent " << sent_size << " bytes: " << buffer << std::endl;
+        LOG(DEBUG) << "Sent " << sent_size << " bytes: " << buffer;
     }
     else
     {
-        std::cerr << "Sent " << sent_size << " bytes instead of " << size_to_send << std::endl;
+        LOG(DEBUG) << "Sent " << sent_size << " bytes instead of " << size_to_send;
         return false;
     }
 
@@ -153,7 +155,7 @@ bool Client::Send(const char *buffer, bool echo)
         ssize_t recv_size = recv(SocketId, buffer, sizeof(buffer), 0);
         if (recv_size > 0)
         {
-            std::cout << "Recv " << recv_size << " bytes: " << buffer << std::endl;
+            LOG(DEBUG) << "Recv " << recv_size << " bytes: " << std::string(buffer);
         }
     }
 

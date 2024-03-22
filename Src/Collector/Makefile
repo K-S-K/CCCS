@@ -10,8 +10,11 @@ SOURCE := ./Main.cpp \
 		  $(LIB_SIGNALS) \
           ./CollectorService.cpp \
 
+DEF :=
+DEF += -DELPP_NO_DEFAULT_LOG_FILE
+
 $(BINARY): $(SOURCE)
-	g++ -g -o $(BINARY) $(SOURCE)
+	g++ $(DEF) -g -o $(BINARY) $(SOURCE)
 
 $(BINARY): | $(BINDIR)
 

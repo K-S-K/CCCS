@@ -21,6 +21,7 @@ docker-compose up --build
 ```
 docker-compose up --force-recreate
 ```
+![How deit looks now](Doc/Fig.01-Debug-complete.png)
 
 ## History
 - [2024.03.21 - Make Makefiles more readable](https://github.com/K-S-K/CCCS/pull/10/files)

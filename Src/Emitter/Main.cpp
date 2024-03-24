@@ -2,21 +2,46 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "../Library/ELog/easylogging++.h"
+
 #include "../Library/BinaryWrapper.hpp"
 #include "../Library/CommTerm.hpp"
 #include "../Library/Measure.hpp"
 #include "../Library/Client.hpp"
 
+INITIALIZE_EASYLOGGINGPP
+
+void ConfigureLog()
+{
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+
+    defaultConf.set(el::Level::Info, el::ConfigurationType::ToFile, "true");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::ToStandardOutput, "true");
+    defaultConf.set(el::Level::Info, el::ConfigurationType::Filename, "emitter.log.info");
+
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::ToFile, "true");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::ToStandardOutput, "false");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::Filename, "emitter.log.debug");
+    defaultConf.set(el::Level::Debug, el::ConfigurationType::Format, "%datetime [%func] [%loc] %msg");
+
+    el::Loggers::reconfigureLogger("default", defaultConf);
+}
+
 int main()
 {
-    int message_count = 5;
+    ConfigureLog();
 
-    sleep(2);
+    LOG(DEBUG) << "Emitter started";
+    LOG(INFO) << "Emitter started";
+
+    sleep(5);
 
     Client client = *(new Client(8080));
     if (client.Start())
     {
-        std::cout << "Emitter is started." << std::endl;
+        LOG(DEBUG) << "Emitter Client started";
     }
     else
     {
@@ -32,7 +57,9 @@ int main()
         BinaryWrapper::WrapMessage(msg, p, sz);
 
         client.Send(p, sz);
-        std::cout << "Sent: " << msg->To2String() << std::endl;
+
+        LOG(DEBUG) << "Sent: " << msg->To2String();
+        LOG(INFO) << "Sent: " << msg->To2String();
     }
 
     sleep(1);
@@ -46,7 +73,9 @@ int main()
         BinaryWrapper::WrapMessage(msg, p, sz);
 
         client.Send(p, sz);
-        std::cout << "Sent: " << msg->To2String() << std::endl;
+
+        LOG(DEBUG) << "Sent: " << msg->To2String();
+        LOG(INFO) << "Sent: " << msg->To2String();
     }
 
     sleep(1);
@@ -60,15 +89,20 @@ int main()
         BinaryWrapper::WrapMessage(msg, p, sz);
 
         client.Send(p, sz);
-        std::cout << "Sent: " << msg->To2String() << std::endl;
+
+        LOG(DEBUG) << "Sent: " << msg->To2String();
+        LOG(INFO) << "Sent: " << msg->To2String();
     }
 
     if (client.Stop())
     {
-        std::cout << "Emitter is completed its job." << std::endl;
+        LOG(DEBUG) << "Emitter is completed its job.";
+        LOG(INFO) << "Emitter is completed its job.";
     }
 
     sleep(1);
+
+    LOG(INFO) << "Collector is completed its job." << std::endl;
 
     return 0;
 }
